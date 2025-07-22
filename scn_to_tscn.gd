@@ -12,14 +12,14 @@ func _init():
 			keep_originals = false
 	
 	for dir_path in directories:
-		var dir = Directory.new()
-		if (dir.open(dir_path) == OK):
+		var dir = DirAccess.open(dir_path)
+		if (dir):
 			dir.list_dir_begin()
 			var filename = dir.get_next()
 			while (filename != ""):
 				if (!dir.current_is_dir() && filename.split(".")[-1] == "scn"):
 					var scene = load(dir.get_current_dir() + "/" + filename)
-					ResourceSaver.save(dir.get_current_dir() + "/" + filename.left(filename.length() - 4) + ".tscn", scene)
+					ResourceSaver.save(scene, dir.get_current_dir() + "/" + filename.left(filename.length() - 4) + ".tscn")
 					print("saved " + dir.get_current_dir() + "/" + filename.left(filename.length() - 4) + ".tscn")
 					if (!keep_originals):
 						dir.remove(dir.get_current_dir() + "/" + filename)
@@ -29,3 +29,4 @@ func _init():
 				filename = dir.get_next()
 	
 	quit()
+
